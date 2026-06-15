@@ -71,8 +71,10 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <optional>true</optional>
+            <version>1.18.40</version> <!-- Version requise pour Java 25 -->
+            <scope>provided</scope>
         </dependency>
+
 
         <!-- DevTools -->
         <dependency>
@@ -90,9 +92,8 @@
         </dependency>
     </dependencies>
 
-    <build>
+   <build>
     <plugins>
-        <!-- Premier plugin : Spring Boot -->
         <plugin>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-maven-plugin</artifactId>
@@ -106,7 +107,6 @@
             </configuration>
         </plugin>
 
-        <!-- Deuxième plugin : Compiler Plugin avec Lombok (Ajouté ici) -->
         <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-compiler-plugin</artifactId>
@@ -116,12 +116,13 @@
                     <path>
                         <groupId>org.projectlombok</groupId>
                         <artifactId>lombok</artifactId>
-                        <version>1.18.36</version> <!-- Version mise à jour pour la compatibilité -->
+                        <version>1.18.40</version> <!-- Version mise à jour pour Java 25 -->
                     </path>
                 </annotationProcessorPaths>
             </configuration>
         </plugin>
     </plugins>
 </build>
+
 
 </project>
