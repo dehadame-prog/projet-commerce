@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Paiement</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', sans-serif; background: #f8fafc; min-height: 100vh; color: #111827; }
+        header { background: #2563eb; color: white; padding: 1rem 2rem; }
+        nav { background: #1d4ed8; padding: 0.5rem 2rem; display: flex; gap: 1.5rem; }
+        nav a { color: #bfdbfe; text-decoration: none; }
+        main { max-width: 1100px; margin: 2rem auto; padding: 0 1rem; display: grid; gap: 1.5rem; }
+        .grid { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 1.5rem; }
+        .card { background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 1.5rem; box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08); }
+        h2, h3 { color: #1d4ed8; margin-bottom: 1rem; }
+        .message { padding: 1rem; border-radius: 8px; margin-bottom: 1rem; }
+        .success { background: #d1fae5; color: #065f46; }
+        .error { background: #fee2e2; color: #991b1b; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 0.75rem; border-bottom: 1px solid #e5e7eb; text-align: left; }
+        th { color: #475569; font-size: 0.9rem; }
+        .total { display: flex; justify-content: space-between; align-items: center; font-size: 1.25rem; font-weight: 800; margin-top: 1rem; color: #111827; }
+        .field { display: grid; gap: 0.45rem; margin-bottom: 1rem; }
+        label { font-weight: 700; color: #1f2937; }
+        select, input { width: 100%; border: 1px solid #cbd5e1; border-radius: 8px; padding: 0.8rem 0.9rem; font-size: 0.95rem; }
+        .btn { width: 100%; border: none; border-radius: 999px; background: #2563eb; color: white; padding: 0.9rem 1.2rem; font-weight: 800; cursor: pointer; }
+        .btn:hover { background: #1d4ed8; }
+        .accounts { display: grid; gap: 0.75rem; }
+        .account { border: 1px solid #e2e8f0; border-radius: 8px; padding: 0.8rem; white-space: pre-line; }
+        .history { display: grid; gap: 0.9rem; }
+        .history-item { border: 1px solid #e2e8f0; border-radius: 10px; padding: 1rem; display: grid; gap: 0.45rem; }
+        .muted { color: #64748b; white-space: pre-line; }
+        @media (max-width: 800px) { .grid { grid-template-columns: 1fr; } }
+    </style>
+    <link rel="stylesheet" th:href="@{/css/theme.css}">
+    <script th:src="@{/js/theme.js}" defer></script>
+</head>
+<body>
+<header><h1>Boutique Commerce</h1></header>
+<nav>
+    <a href="/">Accueil</a>
+    <a href="/products">Produits</a>
+    <a href="/articles">Blog</a>
+    <span style="margin-left:auto;">
+        <a href="/cart">Panier</a>
+        <a href="/logout" style="margin-left:0.75rem;">Deconnexion</a>
+    </span>
+</nav>
+<main>
+    <div>
+        <h2>Paiement de <span th:text="${userName}">client</span></h2>
+        <div th:if="${success}" class="message success" th:text="${success}"></div>
+        <div th:if="${error}" class="message error" th:text="${error}"></div>
+    </div>
+
+    <div class="grid">
+        <section class="card">
+            <h3>Produits a payer</h3>
+            <table th:if="${!cart.empty}">
+                <thead>
+                <tr><th>Produit</th><th>Quantite</th><th>Prix</th><th>Sous-total</th></tr>
+                </thead>
+                <tbody>
+                <tr th:each="item : ${cart.items}">
+                    <td th:text="${item.name}">Produit</td>
+                    <td th:text="${item.quantity}">1</td>
+                    <td th:text="${#numbers.formatDecimal(item.price, 1, 2)} + ' MRU'">0 MRU</td>
+                    <td th:text="${#numbers.formatDecimal(item.subtotal, 1, 2)} + ' MRU'">0 MRU</td>
+                </tr>
+                </tbody>
+            </table>
+            <p th:if="${cart.empty}" class="muted">Votre panier est vide.</p>
+            <div class="total">
+                <span>Total a payer</span>
+                <span th:text="${#numbers.formatDecimal(cartTotal, 1, 2)} + ' MRU'">0 MRU</span>
+            </div>
+        </section>
+
+        <section class="card">
+            <h3>Mode de paiement</h3>
+            <form th:action="@{/payments}" th:object="${payment}" method="post">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                <input type="hidden" th:field="*{amount}" th:value="${cartTotal}" />
+                <div class="field">
+                    <label>Choisir un compte</label>
+                    <select th:field="*{method}" required>
+                        <option th:each="entry : ${recipientAccounts}"
+                                th:value="${entry.key}"
+                                th:text="${entry.key}">BANKILY</option>
+                    </select>
+                </div>
+                <button class="btn" type="submit" th:disabled="${cart.empty or #maps.isEmpty(recipientAccounts)}">
+                    Confirmer le paiement
+                </button>
+            </form>
+            <div class="accounts" style="margin-top:1rem;">
+                <div class="account" th:each="entry : ${recipientAccounts}">
+                    <strong th:text="${entry.key}">BANKILY</strong>
+                    <div th:text="${entry.value}">Nom : numero</div>
+                </div>
+                <p th:if="${#maps.isEmpty(recipientAccounts)}" class="muted">
+                    Aucun compte commerçant disponible pour les produits du panier.
+                </p>
+            </div>
+        </section>
+    </div>
+
+    <section class="card">
+        <h3>Historique des paiements</h3>
+        <div class="history">
+            <div th:each="payment : ${payments}" class="history-item">
+                <strong th:text="${payment.method + ' - ' + #numbers.formatDecimal(payment.amount, 1, 2) + ' MRU'}">Paiement</strong>
+                <span class="muted" th:text="${#temporals.format(payment.createdAt, 'dd/MM/yyyy HH:mm')}">date</span>
+                <span class="muted" th:text="${payment.itemsSummary}">produits</span>
+                <span class="muted" th:text="${payment.recipientSummary}">destinataire</span>
+            </div>
+            <div th:if="${#lists.isEmpty(payments)}" class="history-item muted">
+                Aucun paiement effectue pour l'instant.
+            </div>
+        </div>
+    </section>
+</main>
+</body>
+</html>

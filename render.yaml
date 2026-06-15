@@ -1,0 +1,42 @@
+# render.yaml — Configuration de déploiement automatique sur Render
+# Ce fichier est lu par Render lors de la connexion du dépôt GitHub.
+# Le déploiement se déclenche automatiquement à chaque push sur la branche "main".
+
+services:
+  # ── Application Spring Boot ──────────────────────────────────────────
+  - type: web
+    name: tp-spring-boot
+    runtime: java
+    region: frankfurt  # Région la plus proche (Europe)
+    plan: free
+
+    # Branche déclenchant le déploiement automatique
+    branch: main
+
+    # Compilation Maven (sans les tests pour accélérer le build)
+    buildCommand: mvn clean package -DskipTests
+
+    # Lancement avec le profil prod + port Render (variable $PORT injectée)
+    startCommand: java -Dspring.profiles.active=prod -Dserver.port=$PORT -jar target/tp-spring-boot-0.0.1-SNAPSHOT.jar
+
+    # Variables d'environnement (les valeurs sensibles se renseignent dans le dashboard)
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod
+      - key: DB_URL
+        sync: false   # À renseigner manuellement dans le dashboard Render
+      - key: DB_USERNAME
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
+
+    # Vérification que l'application est bien démarrée
+    healthCheckPath: /
+
+# ── Base de données PostgreSQL (gratuite sur Render) ────────────────────
+databases:
+  - name: tp-spring-boot-db
+    databaseName: tp_spring_boot
+    region: frankfurt
+    plan: free
+    # Après création, copiez l'URL interne Render dans DB_URL du service web

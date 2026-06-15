@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Bouttique Commerce</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; color: #333; }
+        header { background: #2563eb; color: white; padding: 1rem 2rem; display: flex; align-items: center; gap: 1rem; }
+        header h1 { font-size: 1.5rem; }
+        nav { background: #1d4ed8; padding: 0.5rem 2rem; display: flex; gap: 1.5rem; }
+        nav a { color: #bfdbfe; text-decoration: none; font-size: 0.95rem; }
+        nav a:hover { color: white; }
+        main { max-width: 900px; margin: 2rem auto; padding: 0 1rem; }
+        .hero { text-align: center; padding: 3rem 1rem; background: white; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,.08); margin-bottom: 2rem; }
+        .hero h2 { font-size: 2rem; color: #2563eb; margin-bottom: 0.5rem; }
+        .hero p { color: #6b7280; margin-bottom: 2rem; }
+        .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; }
+        .card { background: white; border-radius: 10px; padding: 1.5rem; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,.08); text-decoration: none; color: inherit; transition: transform .2s; }
+        .card:hover { transform: translateY(-4px); }
+        .card .icon { font-size: 2.5rem; margin-bottom: 0.5rem; }
+        .card h3 { color: #2563eb; margin-bottom: 0.25rem; }
+        .card .stat { font-size: 2rem; font-weight: bold; color: #1d4ed8; }
+        .card p { color: #6b7280; font-size: 0.85rem; }
+        .btn { display: inline-block; padding: 0.6rem 1.4rem; background: #2563eb; color: white; border-radius: 6px; text-decoration: none; font-size: 0.9rem; margin: 0.3rem; }
+        .btn:hover { background: #1d4ed8; }
+    </style>
+    <link rel="stylesheet" th:href="@{/css/theme.css}">
+    <script th:src="@{/js/theme.js}" defer></script>
+</head>
+<body>
+<header>
+    <span>🍃</span>
+    <h1>Boutique Commerce</h1>
+</header>
+<nav>
+    <a href="/">🏠 Accueil</a>
+    <a href="/products">📦 Produits</a>
+    <a href="/articles">📝 Blog</a>
+    <span style="margin-left:auto;">
+        <a href="/login" th:if="${!authenticated}">🔐 Connexion</a>
+        <a href="/admin/merchants" th:if="${authenticated and #strings.equals(userRole,'ROLE_ADMIN')}" style="margin-left:0.5rem;">⚙️ Admin</a>
+        <a href="/cart" th:if="${authenticated}" style="margin-left:0.5rem;">🛒 Panier (<span th:text="${cartSize}">0</span>)</a>
+        <a href="/logout" th:if="${authenticated}" style="margin-left:0.5rem;">🚪 Déconnexion</a>
+    </span>
+</nav>
+<main>
+    <div class="hero">
+        <h2>Bienvenue sur la Boutique Commerce</h2>
+        <p>Cette Boutique vous permet de découvrir et d'acheter des produits sans effort physique.</p>
+        <a href="/products" class="btn">Voir les produits</a>
+        <a href="/articles" class="btn">Voir le blog</a>
+    </div>
+    <div class="cards">
+        <a href="/products" class="card">
+            <div class="icon">📦</div>
+            <div class="stat" th:text="${totalProducts}">0</div>
+            <h3>Produits</h3>
+            <p>Catalogue de produits</p>
+        </a>
+        <a href="/articles" class="card">
+            <div class="icon">📝</div>
+            <div class="stat" th:text="${totalArticles}">0</div>
+            <h3>Articles</h3>
+            <p>Blog avec commentaires</p>
+        </a>
+    </div>
+</main>
+</body>
+</html>

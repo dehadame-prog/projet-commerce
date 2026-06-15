@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Connexion - TP Spring Boot</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', sans-serif; background: radial-gradient(circle at top left, #60a5fa, transparent 35%), radial-gradient(circle at bottom right, #a78bfa, transparent 35%), #f8fafc; min-height: 100vh; display: flex; align-items: center; justify-content: center; }
+        .card { width: min(520px, 100%); background: white; border-radius: 28px; box-shadow: 0 30px 80px rgba(15, 23, 42, 0.12); overflow: hidden; }
+        .hero { padding: 2.75rem; background: linear-gradient(135deg, #4338ca, #2563eb); color: white; }
+        .hero h1 { font-size: 2rem; margin-bottom: 0.4rem; }
+        .hero p { color: #dbeafe; line-height: 1.7; }
+        .form-container { padding: 2rem; }
+        .field { margin-bottom: 1rem; display: flex; flex-direction: column; gap: 0.5rem; }
+        label { font-weight: 700; color: #111827; }
+        input { border: 1px solid #d1d5db; border-radius: 12px; padding: 0.9rem 1rem; font-size: 0.95rem; }
+        input:focus { outline: none; border-color: #2563eb; box-shadow: 0 0 0 5px rgba(37,99,235,0.14); }
+        .error-msg { color: #dc2626; font-size: 0.85rem; }
+        .alert { background: #fee2e2; color: #991b1b; padding: 1rem 1.25rem; border-radius: 16px; margin-bottom: 1rem; }
+        .btn { width: 100%; padding: 0.95rem 1.4rem; border-radius: 999px; background: #2563eb; color: white; border: none; cursor: pointer; font-weight: 700; }
+        .btn:hover { background: #1d4ed8; }
+        .page-links { margin-top: 1rem; display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+        .page-links a { color: #2563eb; text-decoration: none; font-weight: 700; }
+        .page-links a:hover { text-decoration: underline; }
+    </style>
+    <link rel="stylesheet" th:href="@{/css/theme.css}">
+    <script th:src="@{/js/theme.js}" defer></script>
+</head>
+<body>
+<div class="card">
+    <div class="hero">
+        <h1>Connexion</h1>
+        <p>Accédez à vos commandes, paiements et contenu privé dès maintenant.</p>
+    </div>
+    <div class="form-container">
+        <div th:if="${success}" class="alert" style="background:#d1fae5;color:#065f46;" th:text="${success}"></div>
+        <div th:if="${error}" class="alert" th:text="${error}"></div>
+        <div th:if="${message}" class="alert" style="background:#dbeafe;color:#1e40af;" th:text="${message}"></div>
+        <form method="post" action="/login">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+            <div class="field">
+                <label>Email</label>
+                <input type="email" name="username" placeholder="jean@gmail.com" th:value="${param.username}" required />
+            </div>
+            <div class="field">
+                <label>Mot de passe</label>
+                <input type="password" name="password" placeholder="••••••••" required />
+            </div>
+            <button type="submit" class="btn">Se connecter</button>
+        </form>
+        <div class="page-links">
+            <a href="/register">Créer un compte</a>
+            <a href="/">Retour à l'accueil</a>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Inscription - TP Spring Boot</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', sans-serif; background: linear-gradient(135deg, #2563eb 0%, #8b5cf6 100%); color: #111827; min-height: 100vh; display: flex; align-items: center; justify-content: center; }
+        .card { width: min(680px, 100%); background: white; border-radius: 28px; box-shadow: 0 30px 80px rgba(15, 23, 42, 0.15); overflow: hidden; }
+        .hero { padding: 3rem; background: linear-gradient(135deg, #1d4ed8, #3b82f6); color: #fff; }
+        .hero h1 { font-size: 2rem; margin-bottom: 0.5rem; }
+        .hero p { color: #dbeafe; line-height: 1.7; }
+        .form-container { padding: 2.5rem; }
+        .form-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; }
+        .field { display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem; }
+        label { font-weight: 700; color: #1f2937; }
+        input, select { border: 1px solid #d1d5db; border-radius: 12px; padding: 0.9rem 1rem; font-size: 0.95rem; }
+        input:focus, select:focus { outline: none; border-color: #2563eb; box-shadow: 0 0 0 5px rgba(37,99,235,0.12); }
+        .error-msg { color: #dc2626; font-size: 0.85rem; }
+        .btn { display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; padding: 0.95rem 1.4rem; border-radius: 999px; background: #2563eb; color: white; text-decoration: none; border: none; cursor: pointer; font-weight: 700; }
+        .btn:hover { background: #1d4ed8; }
+        .note { color: #6b7280; margin-top: 1rem; }
+        .message { background: #d1fae5; color: #065f46; padding: 1rem 1.25rem; border-radius: 14px; margin-bottom: 1rem; }
+        .page-links { display: flex; justify-content: space-between; gap: 1rem; margin-top: 1rem; flex-wrap: wrap; }
+        .page-links a { color: #2563eb; text-decoration: none; font-weight: 700; }
+        .page-links a:hover { text-decoration: underline; }
+    </style>
+    <link rel="stylesheet" th:href="@{/css/theme.css}">
+    <script th:src="@{/js/theme.js}" defer></script>
+</head>
+<body>
+<div class="card">
+    <div class="hero">
+        <h1>Créer un compte</h1>
+        <p>Inscrivez-vous pour accéder aux produits, au blog et au système de paiement sécurisé.</p>
+    </div>
+    <div class="form-container">
+        <div th:if="${success}" class="message" th:text="${success}"></div>
+        <form th:action="@{/register}" th:object="${user}" method="post">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+            <div class="error-msg" th:if="${#fields.hasGlobalErrors()}" th:each="err : ${#fields.globalErrors()}" th:text="${err}"></div>
+            <div class="form-row">
+                <div class="field">
+                    <label>Nom complet *</label>
+                    <input type="text" th:field="*{fullName}" placeholder="Jean Dupont" />
+                    <span class="error-msg" th:if="${#fields.hasErrors('fullName')}" th:errors="*{fullName}"></span>
+                </div>
+                <div class="field">
+                    <label>Email *</label>
+                    <input type="email" th:field="*{email}" placeholder="jean@gmail.com" />
+                    <small style="color:#475569;">L'email doit être un compte Gmail.</small>
+                    <span class="error-msg" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="field">
+                    <label>Mot de passe *</label>
+                    <input type="password" th:field="*{password}" placeholder="••••••••" />
+                    <span class="error-msg" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span>
+                </div>
+                <div class="field">
+                    <label>Contact (téléphone) *</label>
+                    <input type="text" th:field="*{contact}" placeholder="221 77 123 45 67" />
+                    <span class="error-msg" th:if="${#fields.hasErrors('contact')}" th:errors="*{contact}"></span>
+                </div>
+            </div>
+            <div class="field">
+                <label>Nationalité *</label>
+                <input type="text" th:field="*{nationality}" placeholder="Sénégalaise" />
+                <span class="error-msg" th:if="${#fields.hasErrors('nationality')}" th:errors="*{nationality}"></span>
+            </div>
+            <div class="field">
+                <label>Type de compte *</label>
+                <select th:field="*{role}">
+                    <option value="USER" selected>Client</option>
+                    <option value="MERCHANT">Commerçant</option>
+                </select>
+                <small style="color:#475569;">Le commerçant sera activé immédiatement pour permettre la connexion dans cette version.</small>
+            </div>
+            <div class="form-row">
+                <div class="field">
+                    <label>Numero Bankily</label>
+                    <input type="text" th:field="*{bankilyNumber}" placeholder="Ex: 41000001" />
+                </div>
+                <div class="field">
+                    <label>Numero Masrivi</label>
+                    <input type="text" th:field="*{masriviNumber}" placeholder="Ex: 42000002" />
+                </div>
+            </div>
+            <div class="field">
+                <label>Numero Sedad</label>
+                <input type="text" th:field="*{sedadNumber}" placeholder="Ex: 43000003" />
+                <small style="color:#475569;">Pour un compte commercant, renseignez au moins un numero.</small>
+            </div>
+            <button type="submit" class="btn">S'inscrire</button>
+        </form>
+        <div class="page-links">
+            <a href="/login">Vous avez déjà un compte ? Connectez-vous</a>
+            <a href="/">Retour à l'accueil</a>
+        </div>
+    </div>
+</div>
+</body>
+</html>

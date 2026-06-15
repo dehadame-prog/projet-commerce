@@ -1,0 +1,28 @@
+# ──────────────────────────────────────────
+# Profil PROD → Base de données MySQL
+# Lancement : -Dspring.profiles.active=prod
+# Variables d'environnement à configurer :
+#   DB_URL, DB_USERNAME, DB_PASSWORD
+# ──────────────────────────────────────────
+spring:
+  datasource:
+    url: ${DB_URL:jdbc:mysql://localhost:3306/tp_spring_boot?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:}
+
+  jpa:
+    database-platform: org.hibernate.dialect.MySQLDialect
+    hibernate:
+      ddl-auto: update   # Met à jour les tables sans supprimer les données
+
+# Désactiver la console H2 en production
+  h2:
+    console:
+      enabled: false
+
+# Logging moins verbeux en prod
+logging:
+  level:
+    com.example.tp: INFO
+    org.hibernate.SQL: WARN

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Mon panier</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', sans-serif; background: #f3f4f6; color: #111; }
+        header { background: #2563eb; color: white; padding: 1rem 2rem; }
+        header h1 { font-size: 1.5rem; }
+        nav { background: #1d4ed8; padding: 0.5rem 2rem; display: flex; gap: 1.5rem; }
+        nav a { color: #bfdbfe; text-decoration: none; font-size: 0.95rem; }
+        nav a:hover { color: white; }
+        main { max-width: 900px; margin: 2rem auto; padding: 1rem; }
+        table { width: 100%; border-collapse: collapse; background: white; border-radius: 8px; overflow: hidden; }
+        th, td { padding: 0.75rem 1rem; text-align: left; }
+        th { background: #eef2ff; color: #1e40af; }
+        .price { color: #059669; font-weight: 700; }
+        .btn { padding: 0.5rem 1rem; background: #2563eb; color: white; border-radius: 6px; text-decoration: none; border: none; cursor: pointer; }
+        .muted { color: #6b7280; }
+    </style>
+    <link rel="stylesheet" th:href="@{/css/theme.css}">
+    <script th:src="@{/js/theme.js}" defer></script>
+</head>
+<body>
+<header><h1>🍃 TP Spring Boot</h1></header>
+<nav>
+    <a href="/">🏠 Accueil</a>
+    <a href="/products">📦 Produits</a>
+    <a href="/articles">📝 Blog</a>
+    <span style="margin-left:auto;">
+        <a href="/cart">🛒 Panier</a>
+        <a href="/logout" style="margin-left:0.5rem;">🚪 Déconnexion</a>
+    </span>
+</nav>
+<main>
+    <h2>🛒 Mon panier</h2>
+    <div th:if="${cart.empty}">
+        <p class="muted">Votre panier est vide. <a href="/products">Voir les produits</a></p>
+    </div>
+    <div th:if="${!cart.empty}">
+        <form method="post" th:action="@{/cart/update/{productId}(productId=${0})}" id="dummy"></form>
+        <table>
+            <thead>
+            <tr><th>Produit</th><th>Prix</th><th>Quantité</th><th>Sous-total</th><th></th></tr>
+            </thead>
+            <tbody>
+            <tr th:each="item : ${cart.items}">
+                <td th:text="${item.name}"></td>
+                <td class="price" th:text="${#numbers.formatDecimal(item.price,1,2)} + ' €'"></td>
+                <td>
+                    <form th:action="@{/cart/update/{productId}(productId=${item.productId})}" method="post" style="display:inline-block;">
+                        <input type="number" name="quantity" th:value="${item.quantity}" min="0"/>
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                        <button class="btn" type="submit">Mettre à jour</button>
+                    </form>
+                </td>
+                <td th:text="${#numbers.formatDecimal(item.subtotal,1,2)} + ' €'"></td>
+                <td>
+                    <form th:action="@{/cart/remove/{productId}(productId=${item.productId})}" method="post">
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                        <button class="btn" type="submit">Retirer</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <div style="margin-top:1rem;display:flex;justify-content:space-between;align-items:center;">
+            <div><strong>Total :</strong> <span class="price" th:text="${#numbers.formatDecimal(cart.total,1,2)} + ' €'"></span></div>
+            <div>
+                <a th:href="@{/products}" class="btn" style="background:#6b7280;margin-right:0.5rem;">Continuer mes achats</a>
+                <form th:action="@{/payments}" method="get" style="display:inline-block;">
+                    <button class="btn" type="submit">Passer au paiement</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</main>
+</body>
+</html>

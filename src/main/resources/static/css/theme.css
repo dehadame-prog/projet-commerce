@@ -1,0 +1,98 @@
+html.dark-mode body {
+    background: #0f172a !important;
+    color: #e5e7eb !important;
+}
+
+html.dark-mode header {
+    background: #020617 !important;
+}
+
+html.dark-mode nav {
+    background: #111827 !important;
+}
+
+html.dark-mode main,
+html.dark-mode .card,
+html.dark-mode .form-card,
+html.dark-mode .product-card,
+html.dark-mode .article-card,
+html.dark-mode .article-full,
+html.dark-mode .comment-card,
+html.dark-mode .empty,
+html.dark-mode .no-comment,
+html.dark-mode .form-container {
+    background-color: #111827 !important;
+    color: #e5e7eb !important;
+    border-color: #334155 !important;
+}
+
+html.dark-mode h1,
+html.dark-mode h2,
+html.dark-mode h3,
+html.dark-mode h4,
+html.dark-mode label,
+html.dark-mode .product-title,
+html.dark-mode .product-price,
+html.dark-mode .article-info h4,
+html.dark-mode .comment-author {
+    color: #f8fafc !important;
+}
+
+html.dark-mode p,
+html.dark-mode span,
+html.dark-mode .product-description,
+html.dark-mode .product-location,
+html.dark-mode .comment-text,
+html.dark-mode .article-info p,
+html.dark-mode .note,
+html.dark-mode small {
+    color: #cbd5e1 !important;
+}
+
+html.dark-mode input,
+html.dark-mode textarea,
+html.dark-mode select {
+    background: #020617 !important;
+    border-color: #475569 !important;
+    color: #f8fafc !important;
+}
+
+html.dark-mode .btn,
+html.dark-mode .product-button {
+    background: #2563eb !important;
+    color: #ffffff !important;
+    border-color: #60a5fa !important;
+}
+
+html.dark-mode .success,
+html.dark-mode .message {
+    background: #064e3b !important;
+    border-color: #10b981 !important;
+    color: #d1fae5 !important;
+}
+
+html.dark-mode .error,
+html.dark-mode .error-msg {
+    color: #fca5a5 !important;
+}
+
+.theme-toggle {
+    position: fixed;
+    right: 1rem;
+    bottom: 1rem;
+    z-index: 1000;
+    border: 1px solid #cbd5e1;
+    border-radius: 999px;
+    padding: 0.65rem 0.9rem;
+    background: #ffffff;
+    color: #111827;
+    box-shadow: 0 10px 30px rgba(15, 23, 42, 0.2);
+    cursor: pointer;
+    font-weight: 700;
+}
+
+html.dark-mode .theme-toggle {
+    background: #1e293b;
+    color: #f8fafc;
+    border-color: #475569;
+}
